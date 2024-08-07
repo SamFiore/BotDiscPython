@@ -20,7 +20,7 @@ import games.first_game as fg
 # --------- End -------------------------
 
 # ------------ Numpy ----------
-rutaArchivoNumpy = 'C:/Users/franc/Escritorio/Programacion/BotDiscPython/src'
+rutaArchivoNumpy = 'path'
 accountsE = np.load(f'{rutaArchivoNumpy}/file.npy', allow_pickle='TRUE')
 # -----------------------------
 
