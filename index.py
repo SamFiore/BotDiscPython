@@ -11,16 +11,31 @@ import discord
 from discord.ext import commands, tasks
 from urllib import parse, request
 import re
+import sys
 # --------- End ----------------------
 
+# Add path with packages (this is for organization into my code)
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPTS_DIR))
+
 # -------- Internal Packages ------------
-from data.personajes import enemigos as En, heroes as Hr
-from data.fichaJugadores import fichaJugadores as fj
-import games.first_game as fg
+# from .src.data.personajes import enemigos as En, heroes as Hr
+# from .src.data.fichaJugadores import fichaJugadores as fj
+# import src.games.first_game as fg
+# Importamos la clase palabrasDAO
+from DataBase.SQL.palabrasDAO import palabrasDAO
+# Importamos la clase Palabras
+from DataBase.SQL.palabras import Palabra
 # --------- End -------------------------
 
+# .......... TOKEN ...........
+load_dotenv('src/.env')
+TOKEN = os.getenv('DISCORD_TOKEN')
+PATCH_NP = os.getenv('PATCH_NUMPY')
+# ............................
+
 # ------------ Numpy ----------
-rutaArchivoNumpy = 'C:/Users/franc/Escritorio/Programacion/BotDiscPython/src'
+rutaArchivoNumpy = str(PATCH_NP)
 accountsE = np.load(f'{rutaArchivoNumpy}/file.npy', allow_pickle='TRUE')
 # -----------------------------
 
@@ -29,14 +44,6 @@ book = Workbook()
 sheet = book.active
 # ----------------------------
 
-# -------- DotEnv ----------
-# load_dotenv()
-# --------------------------
-
-# .......... TOKEN ...........
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-# ............................
 
 # ------- Config CLIENT --------
 client = discord.Client(intents=discord.Intents.all())
@@ -204,6 +211,14 @@ async def info(ctx):
 # ------------------------------------
 
 # ------ Principal commands ------
+# Dictionary with SQL
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def agregarpalabra(ctx,palabra,*args):
+    argumentos = ' '.join(args)
+    palabra_agregar = Palabra(palabra=palabra,definicion=argumentos)
+    palabrasDAO.insertar(palabra_agregar)
+
 # Dictionary with vars
 @bot.command()
 async def definicion(ctx, *, palabra):
