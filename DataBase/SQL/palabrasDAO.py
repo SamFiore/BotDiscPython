@@ -1,5 +1,6 @@
 from .connection import Conexion as conn
 from .palabras import Palabra
+import psycopg2
 
 class palabrasDAO:
     _SELECCIONAR = 'SELECT * FROM palabras'
@@ -10,14 +11,24 @@ class palabrasDAO:
     @classmethod
     def seleccionar(cls):
         with conn.obtenerConexion():
-            with conn.obtenerCursor() as curs:
-                curs.execute(cls._SELECCIONAR)
-                registros = curs.fetchall()
-                palabras = []
+            palabras = []
+            try: 
+                with conn.obtenerCursor() as curs:
+                    curs.execute(cls._SELECCIONAR)
+                    registros = curs.fetchall()
+                    for registro in registros:
+                        palabra = Palabra(registro[2],registro[0],registro[1])
+                        palabras.append(palabra)
+            except psycopg2.InterfaceError as e:
+                print(f'El cursor esta cerrado: {e}')
+                cursor = conn.obtenerCursor().conn
+                cursor.execute(cls._SELECCIONAR)
+                registros = cursor.fetchall()
                 for registro in registros:
-                    palabra = Palabra(registro[0],registro[1],registro[2])
+                    palabra = Palabra(registro[2],registro[0],registro[1])
                     palabras.append(palabra)
-                return palabras
+
+            return palabras
             
 
     @classmethod

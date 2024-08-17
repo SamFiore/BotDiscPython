@@ -12,6 +12,8 @@ from discord.ext import commands, tasks
 from urllib import parse, request
 import re
 import sys
+import random
+# from spellchecker import SpellChecker
 # --------- End ----------------------
 
 # Add path with packages (this is for organization into my code)
@@ -19,9 +21,9 @@ SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPTS_DIR))
 
 # -------- Internal Packages ------------
-# from .src.data.personajes import enemigos as En, heroes as Hr
-# from .src.data.fichaJugadores import fichaJugadores as fj
-# import src.games.first_game as fg
+from src.DATA.personajes import enemigos as En, heroes as Hr
+from src.DATA.fichaJugadores import fichaJugadores as fj
+import src.games.first_game as fg
 # Importamos la clase palabrasDAO
 from DataBase.SQL.palabrasDAO import palabrasDAO
 # Importamos la clase Palabras
@@ -43,6 +45,10 @@ accountsE = np.load(f'{rutaArchivoNumpy}/file.npy', allow_pickle='TRUE')
 book = Workbook()
 sheet = book.active
 # ----------------------------
+
+# ------- Spellchecker config -----
+# chkr = SpellChecker(language='es')
+# ---------------------------------
 
 
 # ------- Config CLIENT --------
@@ -219,6 +225,14 @@ async def agregarpalabra(ctx,palabra,*args):
     palabra_agregar = Palabra(palabra=palabra,definicion=argumentos)
     palabrasDAO.insertar(palabra_agregar)
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def finddef(ctx,palabra):
+    palabras = palabrasDAO.seleccionar()
+    for word in palabras:
+        if palabra == word.palabra:
+            await ctx.send(f'{word.palabra}: {word.definicion}')
+
 # Dictionary with vars
 @bot.command()
 async def definicion(ctx, *, palabra):
@@ -316,10 +330,33 @@ async def febrero(ctx):
         name="La mecanica que me arregla cada día y pone en marcha el motor de mi corazón.", value="-------------")
     await ctx.send(embed=embed)
 
-# Calling you command
+# Actions commands
 @bot.command()
-async def tag(ctx, member: discord.Member, *, reason=None):
-    await ctx.send(f" Te llaman {member.mention}, contestá")
+async def tag(ctx, member: discord.Member):
+    await ctx.send(f"{member.mention} te esta llamando {ctx.author.mention}, contestá")
+
+@bot.command()
+async def slap(ctx,member:discord.Member):
+    listLinks = ['https://media.tenor.com/Ws6Dm1ZW_vMAAAAM/girl-slap.gif','https://i.pinimg.com/originals/b6/d8/a8/b6d8a83eb652a30b95e87cf96a21e007.gif','https://i.pinimg.com/originals/71/a5/1c/71a51cd5b7a3e372522b5011bdf40102.gif']
+    embed = discord.Embed(color=discord.Colour.red(),timestamp=datetime.datetime.now(tz=None),description=f'{ctx.author.mention} abofeteó a {member.mention}')
+    embed.set_image(url=random.choice(listLinks))
+    await ctx.send(embed=embed)
+
+@bot.command()
+async def kiss(ctx,member:discord.Member):
+    listLinks = ['https://gifdb.com/images/high/anime-kissing-498-x-280-gif-op3h5wkpm21z2dil.gif','https://www.icegif.com/wp-content/uploads/2022/10/icegif-1395.gif','https://www.icegif.com/wp-content/uploads/2022/08/icegif-1219.gif']
+    two_kiss = [f'{ctx.author.mention} besó a {member.mention}',f'{ctx.author.mention} besó apasionadamente a {member.mention}']
+    embed = discord.Embed(color=discord.Colour.red(),timestamp=datetime.datetime.now(tz=None),description=random.choice(two_kiss))
+    embed.set_image(url=random.choice(listLinks))
+    await ctx.send(embed=embed)
+
+@bot.command()
+@commands.is_nsfw()
+async def fuck(ctx,member:discord.Member):
+    listLinks = ['https://i.redd.it/senotti6ycv81.gif','https://cdn.hentaigifz.com/58074/sexi-anime.gif']
+    embed = discord.Embed(color=discord.Colour.red(),timestamp=datetime.datetime.now(tz=None),description=f'{ctx.author.mention} se culeó a {member.mention}')
+    embed.set_image(url=random.choice(listLinks))
+    await ctx.send(embed=embed)
 # -------------------------------
 
 # ------- Balance commands ------

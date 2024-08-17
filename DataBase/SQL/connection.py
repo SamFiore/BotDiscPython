@@ -5,14 +5,8 @@ import os
 
 # Conectamos con la base de datos
 class Conexion:
-    _DATABASE = None
-    _USERNAME = None
-    _PASSWORD = None
-    _HOST = None
-    _PORT = None
     _conn = None
     _curs = None
-
 
     @classmethod
     def obtenerConexion(cls):
@@ -44,7 +38,7 @@ class Conexion:
 
     @classmethod
     def obtenerCursor(cls):
-        if cls._curs == None:
+        if cls._curs == None or cls._curs.closed == True:
             try:
                 cls._curs = cls.obtenerConexion().cursor()
                 return cls._curs
@@ -52,6 +46,8 @@ class Conexion:
                 # Cambiar esto por un mensaje del bot
                 print('No se pudó obtener el cursor: '+e)
                 sys.exit()
+        else:
+            return cls._curs
 
 if __name__ == '__main__':
     Conexion().obtenerConexion()

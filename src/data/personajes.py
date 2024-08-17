@@ -1,4 +1,4 @@
-from data.PlantillaHyV import Enemigo as En, Heroe as He
+from ..DATA.PlantillaHyV import Enemigo as En, Heroe as He
 
 enemigos = {  # Enemigo conforme agregues, debes cambiar en "index.py" la lista
     'esqueleto': En('esqueleto', 100, 10, True),
