@@ -345,7 +345,7 @@ async def slap(ctx,member:discord.Member):
 @bot.command()
 async def kiss(ctx,member:discord.Member):
     listLinks = ['https://gifdb.com/images/high/anime-kissing-498-x-280-gif-op3h5wkpm21z2dil.gif','https://www.icegif.com/wp-content/uploads/2022/10/icegif-1395.gif','https://www.icegif.com/wp-content/uploads/2022/08/icegif-1219.gif']
-    two_kiss = [f'{ctx.author.mention} besó a {member.mention}',f'{ctx.author.mention} besó apasionadamente a {member.mention}']
+    two_kiss = [f'{ctx.author.mention} besó a {member.mention}',f'{ctx.author.mention} besó apasionadamente con lengua a {member.mention}']
     embed = discord.Embed(color=discord.Colour.red(),timestamp=datetime.datetime.now(tz=None),description=random.choice(two_kiss))
     embed.set_image(url=random.choice(listLinks))
     await ctx.send(embed=embed)
